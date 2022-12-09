@@ -27,15 +27,53 @@ function viewAllEmployeesBd() {
     ])
     .then((userChoice) => {
         if (userChoice.deptChoice === 'Finance') {
-            db.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary FROM employee WHERE id = ? JOIN role ON employee_role.id = role.id;', 1, function(err, res) {
+            db.query('SELECT department.name, role.title, role.salary, employee.first_name, employee.last_name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE department.id = ?;', 1, function(err, res) {
                 if (err) {
                     console.error('Something is clearly wrong...')
                 } else {
                     console.table(res);
                 }
             })
-        }
+        } else if (userChoice.deptChoice === 'Marketing') {
+            db.query('SELECT department.name, role.title, role.salary, employee.first_name, employee.last_name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE department.id = ?;', 2, function(err, res) {
+                if (err) {
+                    console.error('Something is clearly wrong...')
+                } else {
+                    console.table(res);
+                } 
+            })
+        } else {
+            db.query('SELECT department.name, role.title, role.salary, employee.first_name, employee.last_name FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id WHERE department.id = ?;', 3, function(err, res) {
+                if (err) {
+                    console.error('Something is clearly wrong...')
+                } else {
+                    console.table(res);
+                }
+            })
+        }   
     })
 };
+
+
+function viewAllEmployeesBd() {
+    inquirer.prompt([ 
+        {
+            type: `list`,
+            name: `managerChoice`,
+            message: `Which manager's employees would you like to view?`,
+            choices: [
+                'Finance',
+                'Marketing',
+                'Sales'
+            ]
+        }
+    ])
+    .then((userChoice) => {
+ 
+ 
+    }
+
+
+}
 
 module.exports = { viewAllEmployees, viewAllEmployeesBd };
