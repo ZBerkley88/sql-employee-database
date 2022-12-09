@@ -1,57 +1,40 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
+const db = require('./db/index');
 
 // Finish your welcome message
 console.log(
     '\nWelcome to the SQL Company Database! \nFurther Instructions Go Here\n'
 );
 
-// Connect to database
-const db = mysql.createConnection(
-    {
-      host: 'localhost',
-      // MySQL username,
-      user: 'root',
-      // TODO: Add MySQL password
-      password: 'Aster1sk!',
-      database: 'company_db'
-    },
-    console.log(`Connected to the company_db database.`)
-);
-  
-
-function displayDataBase() {
+function mainMenu() {
     inquirer.prompt([ 
         {
             type: `list`,
-            name: `displayData`,
-            message: `Select which table you would like to see`,
-            choices: ['Department', 'Role', 'Employee', 'END']
+            name: `mainMenu`,
+            message: `What would you like to do?`,
+            choices: [
+                'View All Employees', 
+                'View All Employees By Department', 
+                'View All Employees By Manager', 
+                'Add Employee', 
+                'Remove Employee', 
+                'Update Employee Role', 
+                'Update Employee Manager'
+            ]
         }
     ])
-            .then((userChoice) => {
-                console.log(userChoice);
-                    if (userChoice.addEmployee === 'Department') {
-                        db.query('DESC department', function(err, results) {
-                            console.log(results);
-                        });
-                    } else if (userChoice.addEmployee === 'Role') {
-                        db.query('DESC role', function(err, results) {
-                            console.log(results);
-                        });
-                    } else if (userChoice.addEmployee === 'Employee') {                        
-                        db.query('DESC employee', function(err, results) {
-                            console.log(results);
-                        });
-                    } else {
-                        console.log('End')    
-                        return
-                    }
-            });
-}
+    .then((userChoice) => {
+        if (userChoice.mainMenu === 'View All Employees') {
+            db.viewAllEmployees();
+        } else if (userChoice.mainMenu === 'View All Employees By Department') {
+            db.viewAllEmployeesBd();
+        } else {
+            console.log('End')    
+            return
+        } 
+    })
+};
 
-// Query database
-db.query('DESC employee', function (err, results) {
-    console.log(results);
-  });
-// displayDataBase();
+
+
+mainMenu();
